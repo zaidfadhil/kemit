@@ -1,2 +1,2 @@
 # kemit
-auto generate AI commits
+auto generate git commits with AI
