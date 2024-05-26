@@ -1,9 +1,8 @@
-package engines
+package engine
 
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -28,8 +27,6 @@ func (ollama *ollamaEngine) GetCommit() (string, error) {
 }
 
 func (ollama *ollamaEngine) request() (string, error) {
-
-	fmt.Println(createPrompt(ollama.Diff))
 
 	payload := map[string]any{
 		"model":  ollama.Model,
