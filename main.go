@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	diff, err := git.DiffFiles()
+	diff, err := git.Diff()
 	if err != nil {
 		fmt.Println("error:", err)
 	}
@@ -16,8 +16,8 @@ func main() {
 	if len(diff) == 0 {
 		fmt.Println("nothing to commit")
 	} else {
-		ollama := engines.NewOllama()
-		message, err := ollama.GetCommit(diff)
+		ollama := engines.NewOllama(diff)
+		message, err := ollama.GetCommit()
 		if err != nil {
 			fmt.Println("error:", err)
 		} else {

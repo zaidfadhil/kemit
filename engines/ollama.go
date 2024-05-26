@@ -3,9 +3,8 @@ package engines
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
-
-	"github.com/zaidfadhil/kemit.git/git"
 )
 
 var _ Engine = (*ollamaEngine)(nil)
@@ -13,24 +12,28 @@ var _ Engine = (*ollamaEngine)(nil)
 type ollamaEngine struct {
 	Host  string
 	Model string
+	Diff  string
 }
 
-func NewOllama() *ollamaEngine {
+func NewOllama(diff string) *ollamaEngine {
 	return &ollamaEngine{
 		Host:  "http://192.168.0.107:11435/api/generate",
 		Model: "llama3",
+		Diff:  diff,
 	}
 }
 
-func (ollama *ollamaEngine) GetCommit(files []git.GitFile) (string, error) {
+func (ollama *ollamaEngine) GetCommit() (string, error) {
 	return ollama.request()
 }
 
 func (ollama *ollamaEngine) request() (string, error) {
 
+	fmt.Println(createPrompt(ollama.Diff))
+
 	payload := map[string]any{
 		"model":  ollama.Model,
-		"prompt": prePrompt,
+		"prompt": createPrompt(ollama.Diff),
 		"format": "json",
 		"stream": false,
 		"options": map[string]any{
