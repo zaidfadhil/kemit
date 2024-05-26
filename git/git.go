@@ -5,19 +5,19 @@ import (
 	"strings"
 )
 
-type GitFileInfo struct {
+type GitFile struct {
 	File   string `json:"file"`
 	Status string `json:"status"`
 	Diff   string `json:"diff"`
 }
 
-func DiffFiles() ([]GitFileInfo, error) {
+func DiffFiles() ([]GitFile, error) {
 	stagedFiles, err := gitStagedFiles()
 	if err != nil {
 		return nil, err
 	}
 
-	var files []GitFileInfo
+	var files []GitFile
 	for _, file := range stagedFiles {
 		if file == "" {
 			continue
@@ -31,7 +31,7 @@ func DiffFiles() ([]GitFileInfo, error) {
 			return nil, err
 		}
 
-		files = append(files, GitFileInfo{
+		files = append(files, GitFile{
 			File:   filePath,
 			Status: status,
 			Diff:   fileDiff,
