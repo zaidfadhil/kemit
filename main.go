@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/zaidfadhil/kemit.git/engine"
-	"github.com/zaidfadhil/kemit.git/git"
+	"github.com/zaidfadhil/kemit/engine"
+	"github.com/zaidfadhil/kemit/git"
 )
 
 func main() {

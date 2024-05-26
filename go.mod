@@ -1,3 +1,3 @@
-module github.com/zaidfadhil/kemit.git
+module github.com/zaidfadhil/kemit
 
 go 1.22
