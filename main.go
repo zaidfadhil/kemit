@@ -12,5 +12,9 @@ func main() {
 		fmt.Println(err)
 	}
 
-	fmt.Println(diff)
+	if len(diff) == 0 {
+		fmt.Println("nothing to commit")
+	} else {
+		fmt.Println(diff)
+	}
 }

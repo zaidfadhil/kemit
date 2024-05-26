@@ -6,7 +6,7 @@ import (
 )
 
 type GitFileInfo struct {
-	Name   string `json:"name"`
+	File   string `json:"file"`
 	Status string `json:"status"`
 	Diff   string `json:"diff"`
 }
@@ -19,18 +19,22 @@ func DiffFiles() ([]GitFileInfo, error) {
 
 	var files []GitFileInfo
 	for _, file := range stagedFiles {
-		status := strings.TrimSpace(file[:2])
-		name := file[3:]
+		if file == "" {
+			continue
+		}
 
-		diff, err := gitFileDiff(name)
+		status := strings.TrimSpace(file[:2])
+		filePath := file[2:]
+
+		fileDiff, err := gitFileDiff(filePath)
 		if err != nil {
 			return nil, err
 		}
 
 		files = append(files, GitFileInfo{
-			Name:   name,
+			File:   filePath,
 			Status: status,
-			Diff:   diff,
+			Diff:   fileDiff,
 		})
 	}
 
@@ -38,13 +42,13 @@ func DiffFiles() ([]GitFileInfo, error) {
 }
 
 func gitStagedFiles() ([]string, error) {
-	cmd := exec.Command("git", "status", "--short")
+	cmd := exec.Command("git", "diff", "--name-status", "--cached")
 	out, err := cmd.Output()
 	if err != nil {
 		return nil, err
 	}
 
-	return strings.Split(strings.TrimSpace(string(out)), "\n"), nil
+	return strings.Split(string(out), "\n"), nil
 }
 
 func gitFileDiff(file string) (string, error) {
