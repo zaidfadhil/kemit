@@ -16,7 +16,11 @@ func main() {
 
 	if len(os.Args) > 1 {
 		if os.Args[1] == "config" {
-			setConfig(os.Args[2:], cfg)
+			err := setConfig(os.Args[2:], cfg)
+			if err != nil {
+				fmt.Println("error:", err)
+				os.Exit(1)
+			}
 		}
 	} else {
 		run(cfg)
@@ -27,6 +31,7 @@ func run(cfg *config.Config) {
 	diff, err := git.Diff()
 	if err != nil {
 		fmt.Println("error:", err)
+		os.Exit(1)
 	}
 
 	if diff == "" {
@@ -36,6 +41,7 @@ func run(cfg *config.Config) {
 		message, err := ollama.GetCommit(diff)
 		if err != nil {
 			fmt.Println("error:", err)
+			os.Exit(1)
 		} else {
 			fmt.Println(message)
 		}
