@@ -3,6 +3,7 @@ package engine
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -11,26 +12,24 @@ var _ Engine = (*ollamaEngine)(nil)
 type ollamaEngine struct {
 	Host  string
 	Model string
-	Diff  string
 }
 
-func NewOllama(diff string) *ollamaEngine {
+func NewOllama(host, model string) *ollamaEngine {
 	return &ollamaEngine{
-		Host:  "http://192.168.0.107:11435/api/generate",
-		Model: "llama3",
-		Diff:  diff,
+		Host:  host + "/api/generate",
+		Model: model,
 	}
 }
 
-func (ollama *ollamaEngine) GetCommit() (string, error) {
-	return ollama.request()
+func (ollama *ollamaEngine) GetCommit(diff string) (string, error) {
+	return ollama.request(diff)
 }
 
-func (ollama *ollamaEngine) request() (string, error) {
+func (ollama *ollamaEngine) request(diff string) (string, error) {
 
 	payload := map[string]any{
 		"model":  ollama.Model,
-		"prompt": createPrompt(ollama.Diff),
+		"prompt": createPrompt(diff),
 		"format": "json",
 		"stream": false,
 		"options": map[string]any{
@@ -40,6 +39,7 @@ func (ollama *ollamaEngine) request() (string, error) {
 
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
+
 		return "", err
 	}
 
@@ -52,6 +52,10 @@ func (ollama *ollamaEngine) request() (string, error) {
 
 	var res map[string]interface{}
 	json.NewDecoder(resp.Body).Decode(&res)
+
+	if res == nil || res["response"] == nil {
+		return "", fmt.Errorf("ollama %s", res["error"])
+	}
 
 	// `response` is a JSON string
 	// https://github.com/ollama/ollama/blob/main/docs/api.md#response-2
