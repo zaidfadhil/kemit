@@ -25,7 +25,7 @@ func (cfg *Config) SaveConfig() error {
 	case "linux":
 		return saveConfigLinux(string(jsonData), configKey)
 	default:
-		return fmt.Errorf("unsupported platform: %s\n", runtime.GOOS)
+		return fmt.Errorf("unsupported platform: %s", runtime.GOOS)
 	}
 }
 

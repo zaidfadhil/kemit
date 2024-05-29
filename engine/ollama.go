@@ -14,8 +14,8 @@ type ollamaEngine struct {
 	Model string
 }
 
-func NewOllama(host, model string) *ollamaEngine {
-	return &ollamaEngine{
+func NewOllama(host, model string) ollamaEngine {
+	return ollamaEngine{
 		Host:  host + "/api/generate",
 		Model: model,
 	}
@@ -26,7 +26,6 @@ func (ollama *ollamaEngine) GetCommit(diff string) (string, error) {
 }
 
 func (ollama *ollamaEngine) request(diff string) (string, error) {
-
 	payload := map[string]any{
 		"model":  ollama.Model,
 		"prompt": createPrompt(diff),
@@ -39,7 +38,6 @@ func (ollama *ollamaEngine) request(diff string) (string, error) {
 
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
-
 		return "", err
 	}
 
@@ -51,7 +49,10 @@ func (ollama *ollamaEngine) request(diff string) (string, error) {
 	defer resp.Body.Close()
 
 	var res map[string]interface{}
-	json.NewDecoder(resp.Body).Decode(&res)
+	err = json.NewDecoder(resp.Body).Decode(&res)
+	if err != nil {
+		return "", err
+	}
 
 	if res == nil || res["response"] == nil {
 		return "", fmt.Errorf("ollama %s", res["error"])

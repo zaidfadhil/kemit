@@ -12,7 +12,7 @@ import (
 
 func main() {
 	cfg := &config.Config{}
-	cfg.LoadConfig()
+	cfg.LoadConfig() //nolint:errcheck
 
 	if len(os.Args) > 1 {
 		if os.Args[1] == "config" {
@@ -66,13 +66,16 @@ func setConfig(args []string, cfg *config.Config) error {
 	flags.StringVar(&cfg.OllamaHost, "ollama_host", cfg.OllamaHost, "ollama host")
 	flags.StringVar(&cfg.OllamaModel, "ollama_model", cfg.OllamaModel, "ollama model")
 
-	flags.Parse(args)
+	err := flags.Parse(args)
+	if err != nil {
+		return err
+	}
 
 	if len(args) == 0 {
 		flags.Usage()
 	}
 
-	err := cfg.SaveConfig()
+	err = cfg.SaveConfig()
 	if err != nil {
 		return err
 	}

@@ -1,0 +1,8 @@
+run:
+  go: '1.22'
+  tests: false
+  timeout: 1m
+
+linters:
+  disable:
+    - unused
