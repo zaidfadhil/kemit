@@ -3,7 +3,7 @@ Automate the process of generating commit messages based on the diff of staged f
 
 ## Requirements
 - Git
-- Ollama (with llama3 or mistral)
+- [Ollama](https://ollama.com) (with llama3 or mistral)
 - Supported platforms: macOS, Linux (currently Arch only)
 
 ## Installation
