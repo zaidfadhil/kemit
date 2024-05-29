@@ -1,11 +1,14 @@
 #!/bin/sh
 
+OS="$(uname -s)"
+ARCH="$(uname -m)"
+REPO="zaidfadhil/kemit"
+INSTALL_DIR="/usr/local/bin"
+LOCAL_BINARY="bin/kemit"
+
 command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
-
-OS="$(uname -s)"
-ARCH="$(uname -m)"
 
 case "$OS" in
     Linux)
@@ -42,10 +45,6 @@ case "$OS" in
       ;;
 esac
 
-REPO="zaidfadhil/kemit"
-INSTALL_DIR="/usr/local/bin"
-LOCAL_BINARY="bin/kemit"
-
 if [ -f "$LOCAL_BINARY" ]; then
   echo "Local binary found. Using it for installation."
   BINARY_PATH="$LOCAL_BINARY"
@@ -64,13 +63,13 @@ else
   echo "Downloading the latest release..."
   curl -L -o kemit.tar.gz "$DOWNLOAD_URL"
 
-  echo "Extracting the downloaded tarball..."
-  tar -xzf kemit.tar.gz
-  BINARY_PATH="kemit"
+  TMP_DIR=$(mktemp -d)
+  tar -xzf kemit.tar.gz -C "$TMP_DIR"
+  BINARY_PATH="$TMP_DIR/kemit"
 fi
 
 echo "Installing the application..."
-mv "$BINARY_PATH" "$INSTALL_DIR"
+sudo mv "$BINARY_PATH" "$INSTALL_DIR" || exit 1
 
 if command_exists kemit; then
   echo "kemit was successfully installed!"
