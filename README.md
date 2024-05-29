@@ -8,26 +8,43 @@ Automate the process of generating commit messages based on the diff of staged f
 
 ## Installation
 
-using [homebrew](https://brew.sh).
+### Using Homebrew
+Install Kemit on macOS using Homebrew:
+
 ```shell
 brew install kemit
 ```
 
-or download the binary directly from github
+### Using Curl
+Install Kemit on macOS or Linux using the following command:
+
 ```shell
 sudo curl -sSL https://raw.githubusercontent.com/zaidfadhil/kemit/main/install.sh | sh
 ```
 
+### From Source
+
+1. Clone the repository:
+```shell
+git clone https://github.com/zaidfadhil/kemit.git
+cd kemit
+```
+
+2. Build the application:
+```shell
+make install
+```
+
 ## Setup
-Make sure you have [ollama](https://ollama.com) installed and running in `serve` mode.
+Make sure [ollama](https://ollama.com) installed and running in `serve` mode.
 
 To set or update the configuration, use the config command:
 
 ```shell
 kemit config [options]
 ```
-- `--ollama_host`: Set the Ollama host. Example: http://localhost:11434. (required).
-- `--ollama_model`: Set the Ollama model. Example: llama3. (required).
+- `--ollama_host`: Set the Ollama Host. Example: http://localhost:11434. (required).
+- `--ollama_model`: Set the Ollama Model. Example: llama3. (required).
 
 example:
 ```shell
