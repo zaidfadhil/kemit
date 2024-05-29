@@ -1,4 +1,5 @@
 # kemit
+[![Go Report Card](https://goreportcard.com/badge/github.com/zaidfadhil/kemit)](https://goreportcard.com/report/github.com/zaidfadhil/kemit)
 Automate the process of generating commit messages based on the diff of staged files in a Git repository
 
 ## Requirements
