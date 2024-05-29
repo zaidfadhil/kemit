@@ -13,3 +13,5 @@ go.work
 .DS_Store?
 
 coverage.out
+
+bin/

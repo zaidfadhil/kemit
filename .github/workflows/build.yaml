@@ -28,7 +28,7 @@ jobs:
 
       - name: Build
         run: |
-          go build -o kemit
+          make build
 
       # - name: Upload artifacts
       #   uses: actions/upload-artifact@v3
