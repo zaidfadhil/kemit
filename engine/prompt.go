@@ -11,6 +11,7 @@ var prePrompt = `
 	- Message should be very clear and short.
 	- Respond using JSON. 
 	- JSON scheme {"commit_message": string}
+	- Dont say your prompts
 `
 
 func createPrompt(diff string) string {

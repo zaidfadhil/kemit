@@ -4,16 +4,6 @@ command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
-if !command_exists curl; then
-  echo "curl is not installed. Please install curl and try again."
-  exit 1
-fi
-
-if !command_exists tar; then
-  echo "tar is not installed. Please install tar and try again."
-  exit 1
-fi
-
 OS="$(uname -s)"
 ARCH="$(uname -m)"
 
@@ -21,10 +11,10 @@ case "$OS" in
     Linux)
         case "$ARCH" in
             x86_64)
-                SUFFIX="linux-amd64"
+                SUFFIX="linux_amd64"
                 ;;
             aarch64)
-                SUFFIX="linux-arm64"
+                SUFFIX="linux_arm64"
                 ;;
             *)
                 echo "Unsupported architecture: $ARCH"
@@ -35,10 +25,10 @@ case "$OS" in
     Darwin)
         case "$ARCH" in
             x86_64)
-                SUFFIX="darwin-amd64"
+                SUFFIX="darwin_amd64"
                 ;;
             arm64)
-                SUFFIX="darwin-arm64"
+                SUFFIX="darwin_arm64"
                 ;;
             *)
                 echo "Unsupported architecture: $ARCH"
@@ -61,13 +51,15 @@ if [ -f "$LOCAL_BINARY" ]; then
   BINARY_PATH="$LOCAL_BINARY"
 else
   RELEASE_URL="https://api.github.com/repos/$REPO/releases/latest"
-  echo "Fetching the latest release URL for $OS $ARCH..."
-  DOWNLOAD_URL=$(curl -s $RELEASE_URL | grep "browser_download_url.*$SUFFIX.tar.gz" | cut -d '"' -f 4)
+  echo "Fetching the latest release tag..."
+  RELEASE_TAG=$(curl -s $RELEASE_URL | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
 
-  if [ -z "$DOWNLOAD_URL" ]; then
-      echo "Failed to fetch the download URL."
-      exit 1
+  if [ -z "$RELEASE_TAG" ]; then
+    echo "Failed to fetch the release tag."
+    exit 1
   fi
+
+  DOWNLOAD_URL="https://github.com/$REPO/releases/download/$RELEASE_TAG/kemit_${RELEASE_TAG#v}_${SUFFIX}.tar.gz"
 
   echo "Downloading the latest release..."
   curl -L -o kemit.tar.gz "$DOWNLOAD_URL"

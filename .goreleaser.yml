@@ -17,15 +17,8 @@ builds:
       - '7'
 checksum:
   name_template: 'checksums.txt'
-archives:
-  - name_template: >-
-      {{ .ProjectName }}_
-      {{- title .Os }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else if eq .Arch "386" }}i386
-      {{- else }}{{ .Arch }}{{ end }}
-      {{- if .Arm }}v{{ .Arm }}{{ end }}
 changelog:
+  use: github
   groups:
     - title: 'New Features'
       regexp: "^.*feat[(\\w)]*:+.*$"
@@ -34,7 +27,10 @@ changelog:
       regexp: "^.*fix[(\\w)]*:+.*$"
       order: 1
     - title: 'Other'
-      order: 5
+      order: 999
+  filters:
+    exclude:
+      - typo
 release:
   prerelease: auto
   mode: append
