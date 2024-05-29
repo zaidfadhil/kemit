@@ -24,4 +24,4 @@ build:
 .PHONY: install
 install: build
 	@cp bin/kemit $(PREFIX)/bin/kemit
-	@chmod 755 $(PREFIX)/bin/kemit
+	@chmod +x $(PREFIX)/bin/kemit

@@ -66,6 +66,7 @@ else
   TMP_DIR=$(mktemp -d)
   tar -xzf kemit.tar.gz -C "$TMP_DIR"
   BINARY_PATH="$TMP_DIR/kemit"
+  chmod +x "$BINARY_PATH"
 fi
 
 echo "Installing the application..."
