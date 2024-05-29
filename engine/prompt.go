@@ -4,11 +4,11 @@ import "fmt"
 
 var prePrompt = `
 	- Your task is to create clean and comprehensive git commit message.
-	- Explain WHAT were the changes and mainly WHY the changes were done. 
 	- Convert 'git diff --staged' command it into a git commit message.
 	- Use the present tense. 
 	- Lines limit to 50 characters.
-	- the commit message should be one paragraph
+	- Message should be one paragraph.
+	- Message should be very clear and short.
 	- Respond using JSON. 
 	- JSON scheme {"commit_message": string}
 `
