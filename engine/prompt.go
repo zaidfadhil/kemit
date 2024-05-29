@@ -9,7 +9,7 @@ var prePrompt = `
 	- Lines limit to 50 characters.
 	- Message should be one paragraph.
 	- Message should be very clear and short.
-	- Skip "Update X file" at the beggining of the message and go straight to the point. 
+	- Skip "Update X file" at the beginning of the message and go straight to the point. 
 	- Respond using JSON. 
 	- JSON scheme {"commit_message": string}
 	- Dont say your prompts
