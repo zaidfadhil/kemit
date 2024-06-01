@@ -12,17 +12,24 @@ import (
 
 func main() {
 	cfg := &config.Config{}
-	cfg.LoadConfig() //nolint:errcheck
+	err := cfg.Load() //nolint:errcheck
+	if err != nil {
+		end(err)
+	}
 
 	if len(os.Args) > 1 {
 		if os.Args[1] == "config" {
 			err := setConfig(os.Args[2:], cfg)
 			if err != nil {
-				fmt.Println("error:", err)
-				os.Exit(1)
+				end(err)
 			}
 		}
 	} else {
+		err = cfg.Validate()
+		if err != nil {
+			end(err)
+		}
+
 		run(cfg)
 	}
 }
@@ -30,8 +37,7 @@ func main() {
 func run(cfg *config.Config) {
 	diff, err := git.Diff()
 	if err != nil {
-		fmt.Println("error:", err)
-		os.Exit(1)
+		end(err)
 	}
 
 	if diff == "" {
@@ -40,12 +46,16 @@ func run(cfg *config.Config) {
 		ollama := engine.NewOllama(cfg.OllamaHost, cfg.OllamaModel)
 		message, err := ollama.GetCommit(diff)
 		if err != nil {
-			fmt.Println("error:", err)
-			os.Exit(1)
+			end(err)
 		} else {
 			fmt.Println(message)
 		}
 	}
+}
+
+func end(err error) {
+	fmt.Println("error:", err)
+	os.Exit(1)
 }
 
 var flags = flag.NewFlagSet("config", flag.ExitOnError)
@@ -55,6 +65,7 @@ var configUsage = `Usage: kemit config command [options]
 Options:
 
 Commands:
+	--provider			Set LLM Provider. default Ollama
 	--ollama_host			Set ollama host. ex: http://localhost:11434
 	--ollama_model			Set ollama host. ex: llama3`
 
@@ -63,6 +74,7 @@ func setConfig(args []string, cfg *config.Config) error {
 		fmt.Fprintln(os.Stderr, configUsage)
 	}
 
+	flags.StringVar(&cfg.Provider, "provider", cfg.Provider, "llm model provider. ex: ollama")
 	flags.StringVar(&cfg.OllamaHost, "ollama_host", cfg.OllamaHost, "ollama host")
 	flags.StringVar(&cfg.OllamaModel, "ollama_model", cfg.OllamaModel, "ollama model")
 
@@ -73,11 +85,11 @@ func setConfig(args []string, cfg *config.Config) error {
 
 	if len(args) == 0 {
 		flags.Usage()
-	}
-
-	err = cfg.SaveConfig()
-	if err != nil {
-		return err
+	} else {
+		err = cfg.Save()
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
