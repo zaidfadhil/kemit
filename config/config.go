@@ -63,7 +63,7 @@ func (cfg *Config) Save() error {
 		return err
 	}
 
-	file, err := os.OpenFile(configPath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644) //os.OpenFile(configPath, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	file, err := os.OpenFile(configPath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return err
 	}
