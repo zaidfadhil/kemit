@@ -2,15 +2,23 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
 	"reflect"
 )
 
 type Config struct {
+	Provider string `json:"provider" env:"PROVIDER" default:"ollama"`
+
 	OllamaHost  string `json:"ollama_host" env:"OLLAMA_HOST"`
 	OllamaModel string `json:"ollama_model" env:"OLLAMA_MODEL"`
 }
+
+var (
+	ollamaMissingDataError   = errors.New("ollama missing model or host")
+	unsupportedProviderError = errors.New("unsupported provider")
+)
 
 func (cfg *Config) Load() error {
 	configPath, err := getConfigFilePath()
@@ -36,7 +44,13 @@ func (cfg *Config) Load() error {
 			envValue := os.Getenv(envTag)
 			if envValue != "" {
 				v.Field(i).SetString(envValue)
+				continue
 			}
+		}
+
+		defaultTag := field.Tag.Get("default")
+		if v.Field(i).String() == "" && defaultTag != "" {
+			v.Field(i).SetString(defaultTag)
 		}
 	}
 
@@ -63,6 +77,19 @@ func (cfg *Config) Save() error {
 	_, err = file.Write(jsonData)
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (cfg *Config) Validate() error {
+	switch cfg.Provider {
+	case "ollama":
+		if cfg.OllamaHost == "" || cfg.OllamaModel == "" {
+			return ollamaMissingDataError
+		}
+	default:
+		return unsupportedProviderError
 	}
 
 	return nil

@@ -25,6 +25,11 @@ func main() {
 			}
 		}
 	} else {
+		err = cfg.Validate()
+		if err != nil {
+			end(err)
+		}
+
 		run(cfg)
 	}
 }
@@ -60,6 +65,7 @@ var configUsage = `Usage: kemit config command [options]
 Options:
 
 Commands:
+	--provider			Set LLM Provider. default Ollama
 	--ollama_host			Set ollama host. ex: http://localhost:11434
 	--ollama_model			Set ollama host. ex: llama3`
 
@@ -68,6 +74,7 @@ func setConfig(args []string, cfg *config.Config) error {
 		fmt.Fprintln(os.Stderr, configUsage)
 	}
 
+	flags.StringVar(&cfg.Provider, "provider", cfg.Provider, "llm model provider. ex: ollama")
 	flags.StringVar(&cfg.OllamaHost, "ollama_host", cfg.OllamaHost, "ollama host")
 	flags.StringVar(&cfg.OllamaModel, "ollama_model", cfg.OllamaModel, "ollama model")
 
@@ -78,11 +85,11 @@ func setConfig(args []string, cfg *config.Config) error {
 
 	if len(args) == 0 {
 		flags.Usage()
-	}
-
-	err = cfg.Save()
-	if err != nil {
-		return err
+	} else {
+		err = cfg.Save()
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
