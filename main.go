@@ -12,14 +12,16 @@ import (
 
 func main() {
 	cfg := &config.Config{}
-	cfg.LoadConfig() //nolint:errcheck
+	err := cfg.Load() //nolint:errcheck
+	if err != nil {
+		end(err)
+	}
 
 	if len(os.Args) > 1 {
 		if os.Args[1] == "config" {
 			err := setConfig(os.Args[2:], cfg)
 			if err != nil {
-				fmt.Println("error:", err)
-				os.Exit(1)
+				end(err)
 			}
 		}
 	} else {
@@ -30,8 +32,7 @@ func main() {
 func run(cfg *config.Config) {
 	diff, err := git.Diff()
 	if err != nil {
-		fmt.Println("error:", err)
-		os.Exit(1)
+		end(err)
 	}
 
 	if diff == "" {
@@ -40,12 +41,16 @@ func run(cfg *config.Config) {
 		ollama := engine.NewOllama(cfg.OllamaHost, cfg.OllamaModel)
 		message, err := ollama.GetCommit(diff)
 		if err != nil {
-			fmt.Println("error:", err)
-			os.Exit(1)
+			end(err)
 		} else {
 			fmt.Println(message)
 		}
 	}
+}
+
+func end(err error) {
+	fmt.Println("error:", err)
+	os.Exit(1)
 }
 
 var flags = flag.NewFlagSet("config", flag.ExitOnError)
@@ -75,7 +80,7 @@ func setConfig(args []string, cfg *config.Config) error {
 		flags.Usage()
 	}
 
-	err = cfg.SaveConfig()
+	err = cfg.Save()
 	if err != nil {
 		return err
 	}

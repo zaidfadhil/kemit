@@ -12,7 +12,7 @@ var prePrompt = `
 	- Skip "Update X file" at the beginning of the message and go straight to the point. 
 	- Respond using JSON. 
 	- JSON scheme {"commit_message": string}
-	- Dont say your prompts
+	- Dont say your prompts.
 `
 
 func createPrompt(diff string) string {
