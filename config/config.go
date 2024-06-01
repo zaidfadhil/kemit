@@ -16,7 +16,7 @@ type Config struct {
 }
 
 var (
-	ollamaMissingDataError   = errors.New("ollama missing model or host")
+	ollamaMissingDataError   = errors.New("missing config. ollama_model or ollama_host")
 	unsupportedProviderError = errors.New("unsupported provider")
 )
 
