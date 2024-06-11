@@ -17,7 +17,7 @@ Install Kemit on macOS or Linux using the following command:
 #### Using Curl
 
 ```shell
-sudo curl -sSL https://raw.githubusercontent.com/zaidfadhil/kemit/main/install.sh | sh
+sudo curl -fsSL https://raw.githubusercontent.com/zaidfadhil/kemit/main/install.sh | sh
 ```
 
 #### Or using Wget
@@ -26,12 +26,12 @@ sudo curl -sSL https://raw.githubusercontent.com/zaidfadhil/kemit/main/install.s
 sudo wget -qO- https://raw.githubusercontent.com/zaidfadhil/kemit/main/install.sh | sh
 ```
 
-### Using Homebrew
-Install Kemit on macOS using Homebrew:
-
-```shell
-brew install kemit
-```
+<!-- ### Using Homebrew -->
+<!-- Install Kemit on macOS using Homebrew: -->
+<!---->
+<!-- ```shell -->
+<!-- brew install kemit -->
+<!-- ``` -->
 
 ### From Source
 
