@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 )
 
 type Config struct {
@@ -83,7 +84,7 @@ func (cfg *Config) Save() error {
 }
 
 func (cfg *Config) Validate() error {
-	switch cfg.Provider {
+	switch strings.ToLower(cfg.Provider) {
 	case "ollama":
 		if cfg.OllamaHost == "" || cfg.OllamaModel == "" {
 			return ollamaMissingDataError
