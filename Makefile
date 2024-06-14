@@ -1,5 +1,5 @@
 PREFIX ?= /usr/local
-VERSION ?= $(shell git describe --tags --dirty --always | sed -e 's/^v//')
+VERSION ?= $(shell git describe --tags --abbrev=0)
 
 .PHONY: go-install
 go-install:

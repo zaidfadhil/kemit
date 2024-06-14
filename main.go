@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"flag"
 	"fmt"
 	"os"
@@ -9,6 +10,9 @@ import (
 	"github.com/zaidfadhil/kemit/engine"
 	"github.com/zaidfadhil/kemit/git"
 )
+
+//go:embed VERSION
+var version string
 
 func main() {
 	cfg := &config.Config{}
@@ -23,6 +27,8 @@ func main() {
 			if err != nil {
 				end(err)
 			}
+		} else if os.Args[1] == "version" {
+			fmt.Printf("kemit version: %s", version)
 		}
 	} else {
 		err = cfg.Validate()

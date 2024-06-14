@@ -4,6 +4,8 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+    ldflags:
+      - -X main.version={{ .Version }}
     goos:
       - darwin
       - linux
@@ -31,6 +33,8 @@ changelog:
   filters:
     exclude:
       - typo
+      - "^test:"
 release:
   prerelease: auto
   mode: append
+  draft: false
