@@ -1,0 +1,17 @@
+#!/bin/sh
+
+get_version() {
+    cat VERSION
+}
+
+# Function to get the latest git tag
+get_latest_tag() {
+    git describe --tags --abbrev=0
+}
+
+if [ "$(get_version)" != "$(get_latest_tag)" ]; then
+    echo "ERROR: The VERSION file does not match the latest git tag."
+    exit 1
+fi
+
+exit 0

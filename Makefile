@@ -25,3 +25,6 @@ build:
 install: build
 	@cp bin/kemit $(PREFIX)/bin/kemit
 	@chmod +x $(PREFIX)/bin/kemit
+
+setup-githook:
+	git config core.hooksPath .githooks
