@@ -16,7 +16,7 @@ var version string
 
 func main() {
 	cfg := &config.Config{}
-	err := cfg.Load() //nolint:errcheck
+	err := cfg.Load()
 	if err != nil {
 		end(err)
 	}
@@ -28,7 +28,7 @@ func main() {
 				end(err)
 			}
 		} else if os.Args[1] == "version" {
-			fmt.Printf("kemit version: %s", version)
+			fmt.Println("kemit version: " + version)
 		}
 	} else {
 		err = cfg.Validate()
