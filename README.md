@@ -73,5 +73,21 @@ kemit
 
 If there are no staged changes, the application will output "nothing to commit". Otherwise, it will generate and print a commit message based on the staged diff.
 
+## Uninstall
+
+To uninstall Kemit, you can use the uninstall script which removes the installed binary:
+
+```shell
+sudo curl -fsSL https://raw.githubusercontent.com/zaidfadhil/kemit/main/uninstall.sh | sh
+```
+
+Or, if you prefer using Wget:
+
+```shell
+sudo wget -qO- https://raw.githubusercontent.com/zaidfadhil/kemit/main/uninstall.sh | sh
+```
+
+Ensure that the uninstallation script is also placed in the repository if it does not exist.
+
 ## License
 kemit is licensed under the [MIT License](https://github.com/zaidfadhil/kemit/blob/master/LICENSE).
