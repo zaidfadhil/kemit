@@ -26,13 +26,6 @@ sudo curl -fsSL https://raw.githubusercontent.com/zaidfadhil/kemit/main/install.
 sudo wget -qO- https://raw.githubusercontent.com/zaidfadhil/kemit/main/install.sh | sh
 ```
 
-<!-- ### Using Homebrew -->
-<!-- Install Kemit on macOS using Homebrew: -->
-<!---->
-<!-- ```shell -->
-<!-- brew install kemit -->
-<!-- ``` -->
-
 ### From Source
 
 1. Clone the repository:
@@ -80,14 +73,6 @@ To uninstall Kemit, you can use the uninstall script which removes the installed
 ```shell
 sudo curl -fsSL https://raw.githubusercontent.com/zaidfadhil/kemit/main/uninstall.sh | sh
 ```
-
-Or, if you prefer using Wget:
-
-```shell
-sudo wget -qO- https://raw.githubusercontent.com/zaidfadhil/kemit/main/uninstall.sh | sh
-```
-
-Ensure that the uninstallation script is also placed in the repository if it does not exist.
 
 ## License
 kemit is licensed under the [MIT License](https://github.com/zaidfadhil/kemit/blob/master/LICENSE).
