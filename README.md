@@ -72,6 +72,8 @@ To uninstall Kemit, you can use the uninstall script which removes the installed
 
 ```shell
 sudo curl -fsSL https://raw.githubusercontent.com/zaidfadhil/kemit/main/uninstall.sh | sh
+// or
+sudo wget -qO- https://raw.githubusercontent.com/zaidfadhil/kemit/main/uninstall.sh | sh
 ```
 
 ## License
