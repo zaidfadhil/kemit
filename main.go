@@ -74,7 +74,7 @@ Commands:
 	--provider			Set LLM Provider. default Ollama
 	--ollama_host			Set ollama host. ex: http://localhost:11434
 	--ollama_model			Set ollama host. ex: llama3
-	--commit_style			Set Commit Style. ex: normal, conventional_commit default: conventional-commit`
+	--commit_style			Set Commit Style. ex: normal, conventional-commit default: conventional-commit`
 
 func setConfig(args []string, cfg *config.Config) error {
 	flags.Usage = func() {
