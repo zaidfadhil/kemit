@@ -50,7 +50,7 @@ func run(cfg *config.Config) {
 		fmt.Println("nothing to commit")
 	} else {
 		ollama := engine.NewOllama(cfg.OllamaHost, cfg.OllamaModel)
-		message, err := ollama.GetCommit(diff)
+		message, err := ollama.GetCommitMessage(diff, cfg.CommitStyle)
 		if err != nil {
 			end(err)
 		} else {
@@ -73,7 +73,8 @@ Options:
 Commands:
 	--provider			Set LLM Provider. default Ollama
 	--ollama_host			Set ollama host. ex: http://localhost:11434
-	--ollama_model			Set ollama host. ex: llama3`
+	--ollama_model			Set ollama host. ex: llama3
+	--commit_style			Set Commit Style. ex: normal, conventional_commit default: conventional-commit`
 
 func setConfig(args []string, cfg *config.Config) error {
 	flags.Usage = func() {
@@ -83,6 +84,7 @@ func setConfig(args []string, cfg *config.Config) error {
 	flags.StringVar(&cfg.Provider, "provider", cfg.Provider, "llm model provider. ex: ollama")
 	flags.StringVar(&cfg.OllamaHost, "ollama_host", cfg.OllamaHost, "ollama host")
 	flags.StringVar(&cfg.OllamaModel, "ollama_model", cfg.OllamaModel, "ollama model")
+	flags.StringVar(&cfg.CommitStyle, "commit_style", cfg.CommitStyle, "commit style. ex: conventional-commit")
 
 	err := flags.Parse(args)
 	if err != nil {

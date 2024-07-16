@@ -1,5 +1,5 @@
 package engine
 
 type Engine interface {
-	GetCommit(diff string) (string, error)
+	GetCommitMessage(gitDiff, style string) (string, error)
 }

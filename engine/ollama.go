@@ -21,14 +21,14 @@ func NewOllama(host, model string) ollamaEngine {
 	}
 }
 
-func (ollama *ollamaEngine) GetCommit(diff string) (string, error) {
-	return ollama.request(diff)
+func (ollama *ollamaEngine) GetCommitMessage(gitDiff, style string) (string, error) {
+	return ollama.request(gitDiff, style)
 }
 
-func (ollama *ollamaEngine) request(diff string) (string, error) {
+func (ollama *ollamaEngine) request(diff, style string) (string, error) {
 	payload := map[string]any{
 		"model":  ollama.Model,
-		"prompt": createPrompt(diff),
+		"prompt": createPrompt(diff, style),
 		"format": "json",
 		"stream": false,
 		"options": map[string]any{
