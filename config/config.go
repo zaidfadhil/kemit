@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -14,6 +15,8 @@ type Config struct {
 
 	OllamaHost  string `json:"ollama_host" env:"OLLAMA_HOST"`
 	OllamaModel string `json:"ollama_model" env:"OLLAMA_MODEL"`
+
+	CommitStyle string `json:"commit_style" env:"COMMIT_STYLE" default:"conventional-commit"`
 }
 
 var (
@@ -44,14 +47,14 @@ func (cfg *Config) Load() error {
 		if envTag != "" {
 			envValue := os.Getenv(envTag)
 			if envValue != "" {
-				v.Field(i).SetString(envValue)
+				setFieldValue(v.Field(i), envValue)
 				continue
 			}
 		}
 
 		defaultTag := field.Tag.Get("default")
-		if v.Field(i).String() == "" && defaultTag != "" {
-			v.Field(i).SetString(defaultTag)
+		if v.Field(i).IsZero() && defaultTag != "" {
+			setFieldValue(v.Field(i), defaultTag)
 		}
 	}
 
@@ -124,4 +127,19 @@ func getConfigFilePath() (string, error) {
 	}
 
 	return configPath, nil
+}
+
+func setFieldValue(field reflect.Value, value string) {
+	switch field.Kind() {
+	case reflect.String:
+		field.SetString(value)
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		if intValue, err := strconv.ParseInt(value, 10, 64); err == nil {
+			field.SetInt(intValue)
+		}
+	case reflect.Bool:
+		if boolValue, err := strconv.ParseBool(value); err == nil {
+			field.SetBool(boolValue)
+		}
+	}
 }

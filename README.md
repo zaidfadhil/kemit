@@ -34,7 +34,7 @@ git clone https://github.com/zaidfadhil/kemit.git
 cd kemit
 ```
 
-2. Build the application:
+2. Build and Install:
 ```shell
 make install
 ```
@@ -50,6 +50,7 @@ kemit config [options]
 - `--provider`: Set the LLM Provider. (default: ollama).
 - `--ollama_host`: Set the Ollama Host. Example: http://localhost:11434. (required).
 - `--ollama_model`: Set the Ollama Model. Example: llama3. (required).
+- `--commit_style`: Set the Commit Style. Example: normal, conventional-commit (default: conventional-commit)
 
 example:
 ```shell
