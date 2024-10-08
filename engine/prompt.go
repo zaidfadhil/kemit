@@ -16,7 +16,8 @@ var basePrePrompt = `
 
 var conventionalCommitPrompt = `
 	- Use Conventional commit.
-	- Do not preface the commit with anything. Conventional commit keywords: fix, feat, build, chore, ci, docs, style, refactor, perf, test.
+	- Conventional commit keywords: fix, feat, build, chore, ci, docs, style, refactor, perf, test.
+	- Do not preface the commit with anything. 
 `
 
 func createPrompt(diff, style string) string {

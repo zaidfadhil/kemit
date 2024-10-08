@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/zaidfadhil/kemit/cli"
 	"github.com/zaidfadhil/kemit/config"
@@ -15,52 +16,48 @@ import (
 var version string
 
 func main() {
-	app := cli.New()
+	cmd := cli.New()
 
 	cfg := &config.Config{}
-	err := cfg.Load()
-	if err != nil {
+	if err := cfg.Load(); err != nil {
 		end(err)
 	}
 
 	// config
 	var configCmd *cli.Command
-	configCmd = app.AddCommand("config", "Set the configuration", func(_ []string) {
+	configCmd = cmd.AddCommand("config", "Set the configuration", func(_ []string) {
 		cfg.Provider = configCmd.Flags.Lookup("provider").Value.String()
 		cfg.OllamaHost = configCmd.Flags.Lookup("ollama_host").Value.String()
 		cfg.OllamaModel = configCmd.Flags.Lookup("ollama_model").Value.String()
 		cfg.CommitStyle = configCmd.Flags.Lookup("commit_style").Value.String()
-		err := cfg.Save()
-		if err != nil {
+		if err := cfg.Save(); err != nil {
 			end(err)
 		}
 	})
 	configCmd.Flags.String("provider", cfg.Provider, "LLM models provider. ex: ollama")
-	configCmd.Flags.String("ollama_host", cfg.OllamaHost, "Ollama host")
-	configCmd.Flags.String("ollama_model", cfg.OllamaModel, "Ollama model")
+	configCmd.Flags.String("ollama_host", cfg.OllamaHost, "Ollama host. ex: localhost:11434")
+	configCmd.Flags.String("ollama_model", cfg.OllamaModel, "Ollama model. ex: llama3.1")
 	configCmd.Flags.String("commit_style", cfg.CommitStyle, "Commit style. ex: conventional-commit")
 
 	// version
-	app.AddCommand("version", "Show the version", func(_ []string) {
-		fmt.Println("kemit version", version)
+	cmd.AddCommand("version", "Show the version", func(_ []string) {
+		fmt.Println("version:", strings.TrimSpace(version))
 	})
 
 	// help
-	app.AddCommand("help", "Help about any command", func(_ []string) {
-		app.PrintHelp()
+	cmd.AddCommand("help", "Help about any command", func(_ []string) {
+		cmd.PrintHelp()
 	})
 
-	app.SetDefaultCommand(app.AddCommand("", "", func(args []string) {
-		err := cfg.Validate()
-		if err != nil {
+	cmd.SetDefaultCommand(cmd.AddCommand("", "", func(args []string) {
+		if err := cfg.Validate(); err != nil {
 			end(err)
 		}
 
 		run(cfg)
 	}))
 
-	err = app.Run()
-	if err != nil {
+	if err := cmd.Execute(); err != nil {
 		end(err)
 	}
 }

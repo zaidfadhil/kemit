@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	cliUnknownCommandError = errors.New("cli unknown command")
+	unknownCLICommandError = errors.New("unknown cli command")
 )
 
 type Command struct {
@@ -20,18 +20,16 @@ type Command struct {
 
 type CLI struct {
 	commands       map[string]*Command
-	defaultHelp    bool
 	defaultCommand *Command
 }
 
 func New() *CLI {
 	return &CLI{
-		commands:    make(map[string]*Command),
-		defaultHelp: true,
+		commands: make(map[string]*Command),
 	}
 }
 
-func (cli *CLI) AddCommand(name, description string, action func(args []string)) *Command {
+func (cli *CLI) AddCommand(name string, description string, action func(args []string)) *Command {
 	cmd := &Command{
 		Name:        name,
 		Description: description,
@@ -46,44 +44,32 @@ func (cli *CLI) SetDefaultCommand(cmd *Command) {
 	cli.defaultCommand = cmd
 }
 
-func (cli *CLI) EnableHelp(enable bool) {
-	cli.defaultHelp = enable
-}
-
-func (cli *CLI) Run() error {
+func (cli *CLI) Execute() error {
 	if len(os.Args) == 1 {
 		if cli.defaultCommand != nil {
 			cli.defaultCommand.Action(nil)
 			return nil
 		}
-		if cli.defaultHelp {
-			cli.PrintHelp()
-		}
+		cli.PrintHelp()
 		return nil
 	}
 
 	cmdName := os.Args[1]
 	cmd, exists := cli.commands[cmdName]
-
 	if !exists {
-		fmt.Printf("Error: unknown command '%s'\n", cmdName)
-		if cli.defaultHelp {
-			cli.PrintHelp()
-		}
 		if cmdName == "-h" || cmdName == "-help" || cmdName == "--help" {
+			cli.PrintHelp()
 			return nil
+		} else {
+			return unknownCLICommandError
 		}
-
-		return cliUnknownCommandError
 	}
 
-	err := cmd.Flags.Parse(os.Args[2:])
-	if err != nil {
+	if err := cmd.Flags.Parse(os.Args[2:]); err != nil {
 		return err
 	}
 
 	cmd.Action(cmd.Flags.Args())
-
 	return nil
 }
 
