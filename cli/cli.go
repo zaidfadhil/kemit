@@ -1,9 +1,14 @@
 package cli
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
+)
+
+var (
+	cliUnknownCommandError = errors.New("cli unknown command")
 )
 
 type Command struct {
@@ -69,7 +74,7 @@ func (cli *CLI) Run() error {
 			return nil
 		}
 
-		os.Exit(1)
+		return cliUnknownCommandError
 	}
 
 	err := cmd.Flags.Parse(os.Args[2:])
