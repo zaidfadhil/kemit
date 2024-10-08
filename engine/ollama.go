@@ -54,6 +54,8 @@ func (ollama *ollamaEngine) request(diff, style string) (string, error) {
 		return "", err
 	}
 
+	fmt.Println(resp, res, "aaaaaa", res["response"])
+
 	if res == nil || res["response"] == nil {
 		return "", fmt.Errorf("ollama %s", res["error"])
 	}

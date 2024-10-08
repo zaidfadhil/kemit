@@ -24,5 +24,5 @@ func createPrompt(diff, style string) string {
 		basePrePrompt = basePrePrompt + conventionalCommitPrompt
 	}
 
-	return fmt.Sprintf("%s git diff: ```%s```", basePrePrompt, diff)
+	return fmt.Sprintf("%s\n%s", basePrePrompt, diff)
 }
