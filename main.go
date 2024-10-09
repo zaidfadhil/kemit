@@ -2,10 +2,11 @@ package main
 
 import (
 	_ "embed"
-	"flag"
 	"fmt"
 	"os"
+	"strings"
 
+	"github.com/zaidfadhil/kemit/cli"
 	"github.com/zaidfadhil/kemit/config"
 	"github.com/zaidfadhil/kemit/engine"
 	"github.com/zaidfadhil/kemit/git"
@@ -15,28 +16,49 @@ import (
 var version string
 
 func main() {
+	cmd := cli.New()
+
 	cfg := &config.Config{}
-	err := cfg.Load()
-	if err != nil {
+	if err := cfg.Load(); err != nil {
 		end(err)
 	}
 
-	if len(os.Args) > 1 {
-		if os.Args[1] == "config" {
-			err := setConfig(os.Args[2:], cfg)
-			if err != nil {
-				end(err)
-			}
-		} else if os.Args[1] == "version" {
-			fmt.Println("kemit version: " + version)
+	// config
+	var configCmd *cli.Command
+	configCmd = cmd.AddCommand("config", "Set the configuration", func(_ []string) {
+		cfg.Provider = configCmd.Flags.Lookup("provider").Value.String()
+		cfg.OllamaHost = configCmd.Flags.Lookup("ollama_host").Value.String()
+		cfg.OllamaModel = configCmd.Flags.Lookup("ollama_model").Value.String()
+		cfg.CommitStyle = configCmd.Flags.Lookup("commit_style").Value.String()
+		if err := cfg.Save(); err != nil {
+			end(err)
 		}
-	} else {
-		err = cfg.Validate()
-		if err != nil {
+	})
+	configCmd.Flags.String("provider", cfg.Provider, "LLM models provider. ex: ollama")
+	configCmd.Flags.String("ollama_host", cfg.OllamaHost, "Ollama host. ex: localhost:11434")
+	configCmd.Flags.String("ollama_model", cfg.OllamaModel, "Ollama model. ex: llama3.1")
+	configCmd.Flags.String("commit_style", cfg.CommitStyle, "Commit style. ex: conventional-commit")
+
+	// version
+	cmd.AddCommand("version", "Show the version", func(_ []string) {
+		fmt.Println("version:", strings.TrimSpace(version))
+	})
+
+	// help
+	cmd.AddCommand("help", "Help about any command", func(_ []string) {
+		cmd.PrintHelp()
+	})
+
+	cmd.SetDefaultCommand(cmd.AddCommand("", "", func(_ []string) {
+		if err := cfg.Validate(); err != nil {
 			end(err)
 		}
 
 		run(cfg)
+	}))
+
+	if err := cmd.Execute(); err != nil {
+		end(err)
 	}
 }
 
@@ -47,8 +69,9 @@ func run(cfg *config.Config) {
 	}
 
 	if diff == "" {
-		fmt.Println("nothing to commit")
+		fmt.Println("Nothing to commit")
 	} else {
+		// TODO: move this to the enigne pkg
 		ollama := engine.NewOllama(cfg.OllamaHost, cfg.OllamaModel)
 		message, err := ollama.GetCommitMessage(diff, cfg.CommitStyle)
 		if err != nil {
@@ -62,43 +85,4 @@ func run(cfg *config.Config) {
 func end(err error) {
 	fmt.Println("error:", err)
 	os.Exit(1)
-}
-
-var flags = flag.NewFlagSet("config", flag.ExitOnError)
-
-var configUsage = `Usage: kemit config command [options]
-
-Options:
-
-Commands:
-	--provider			Set LLM Provider. default Ollama
-	--ollama_host			Set ollama host. ex: http://localhost:11434
-	--ollama_model			Set ollama host. ex: llama3
-	--commit_style			Set Commit Style. ex: normal, conventional-commit default: conventional-commit`
-
-func setConfig(args []string, cfg *config.Config) error {
-	flags.Usage = func() {
-		fmt.Fprintln(os.Stderr, configUsage)
-	}
-
-	flags.StringVar(&cfg.Provider, "provider", cfg.Provider, "llm model provider. ex: ollama")
-	flags.StringVar(&cfg.OllamaHost, "ollama_host", cfg.OllamaHost, "ollama host")
-	flags.StringVar(&cfg.OllamaModel, "ollama_model", cfg.OllamaModel, "ollama model")
-	flags.StringVar(&cfg.CommitStyle, "commit_style", cfg.CommitStyle, "commit style. ex: conventional-commit")
-
-	err := flags.Parse(args)
-	if err != nil {
-		return err
-	}
-
-	if len(args) == 0 {
-		flags.Usage()
-	} else {
-		err = cfg.Save()
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
 }

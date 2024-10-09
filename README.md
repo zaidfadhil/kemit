@@ -48,14 +48,14 @@ To set or update the configuration, use the config command:
 ```shell
 kemit config [options]
 ```
-- `--provider`: Set the LLM Provider. (default: `ollama`).
-- `--ollama_host`: Set the Ollama Host. Example: http://localhost:11434. (required).
-- `--ollama_model`: Set the Ollama Model. Example: llama3. (required).
-- `--commit_style`: Set the Commit Style. Example: normal, conventional-commit (default: `conventional-commit`)
+- `-provider`: Set the LLM Provider. (default: `ollama`).
+- `-ollama_host`: Set the Ollama Host. Example: http://localhost:11434. (required).
+- `-ollama_model`: Set the Ollama Model. Example: llama3. (required).
+- `-commit_style`: Set the Commit Style. Example: normal, conventional-commit (default: `conventional-commit`)
 
 example:
 ```shell
-kemit config --ollama_host http://localhost:11434 --ollama_model llama3
+kemit config -ollama_host http://localhost:11434 -ollama_model llama3.1
 ```
 
 ## Usage
@@ -66,7 +66,7 @@ To generate a commit message:
 kemit
 ```
 
-If there are no staged changes, the application will output "nothing to commit". Otherwise, it will generate and print a commit message based on the staged diff.
+If there are no staged changes, the application will output "Nothing to commit". Otherwise, it will generate and print a commit message based on the staged diff.
 
 ## Uninstall
 
