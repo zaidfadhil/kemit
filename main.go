@@ -49,7 +49,7 @@ func main() {
 		cmd.PrintHelp()
 	})
 
-	cmd.SetDefaultCommand(cmd.AddCommand("", "", func(args []string) {
+	cmd.SetDefaultCommand(cmd.AddCommand("", "", func(_ []string) {
 		if err := cfg.Validate(); err != nil {
 			end(err)
 		}
