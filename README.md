@@ -66,7 +66,7 @@ To generate a commit message:
 kemit
 ```
 
-If there are no staged changes, the application will output "Nothing to commit". Otherwise, it will generate and print a commit message based on the staged diff.
+If there are no staged changes, the application will output "Nothing to commit." Otherwise, it will generate and print a commit message based on the staged diff.
 
 ## Uninstall
 
