@@ -69,7 +69,7 @@ func run(cfg *config.Config) {
 	}
 
 	if diff == "" {
-		fmt.Println("Nothing to commit")
+		fmt.Println("Nothing to commit.")
 	} else {
 		// TODO: move this to the enigne pkg
 		ollama := engine.NewOllama(cfg.OllamaHost, cfg.OllamaModel)

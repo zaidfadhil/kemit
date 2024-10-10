@@ -49,8 +49,7 @@ func (ollama *ollamaEngine) request(diff, style string) (string, error) {
 	defer resp.Body.Close()
 
 	var res map[string]interface{}
-	err = json.NewDecoder(resp.Body).Decode(&res)
-	if err != nil {
+	if err = json.NewDecoder(resp.Body).Decode(&res); err != nil {
 		return "", err
 	}
 
