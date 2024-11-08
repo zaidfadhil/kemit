@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	unknownCLICommandError = errors.New("unknown cli command")
+	ErrUnknownCLICommand = errors.New("unknown cli command")
 )
 
 type Command struct {
@@ -61,7 +61,7 @@ func (cli *CLI) Execute() error {
 			cli.PrintHelp()
 			return nil
 		} else {
-			return unknownCLICommandError
+			return ErrUnknownCLICommand
 		}
 	}
 

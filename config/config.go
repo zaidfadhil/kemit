@@ -20,8 +20,8 @@ type Config struct {
 }
 
 var (
-	ollamaMissingDataError   = errors.New("missing config. ollama_model or ollama_host")
-	unsupportedProviderError = errors.New("unsupported provider")
+	ErrMissingOllamaData   = errors.New("missing config. ollama_model or ollama_host")
+	ErrUnsupportedProvider = errors.New("unsupported provider")
 )
 
 func (cfg *Config) Load() error {
@@ -30,7 +30,7 @@ func (cfg *Config) Load() error {
 		return err
 	}
 
-	file, err := os.ReadFile(configPath)
+	file, err := os.ReadFile(filepath.Clean(configPath))
 	if err == nil {
 		err := json.Unmarshal(file, &cfg)
 		if err != nil {
@@ -67,7 +67,7 @@ func (cfg *Config) Save() error {
 		return err
 	}
 
-	file, err := os.OpenFile(configPath, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	file, err := os.OpenFile(filepath.Clean(configPath), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
 	if err != nil {
 		return err
 	}
@@ -90,10 +90,10 @@ func (cfg *Config) Validate() error {
 	switch strings.ToLower(cfg.Provider) {
 	case "ollama":
 		if cfg.OllamaHost == "" || cfg.OllamaModel == "" {
-			return ollamaMissingDataError
+			return ErrMissingOllamaData
 		}
 	default:
-		return unsupportedProviderError
+		return ErrUnsupportedProvider
 	}
 
 	return nil
@@ -109,12 +109,12 @@ func getConfigFilePath() (string, error) {
 
 	_, err = os.Stat(configPath)
 	if err != nil {
-		err = os.MkdirAll(filepath.Dir(configPath), 0755)
+		err = os.MkdirAll(filepath.Dir(configPath), 0750)
 		if err != nil {
 			return "", err
 		}
 
-		file, err := os.Create(configPath)
+		file, err := os.OpenFile(filepath.Clean(configPath), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
 		if err != nil {
 			return "", err
 		}
