@@ -1,0 +1,28 @@
+name: security
+
+# runs every at 00:00 on Sunday UTC time.
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  gosec:
+    name: gosec
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    env:
+      GO111MODULE: on
+    steps:
+      - name: checkout source
+        uses: actions/checkout@v4
+      - name: run gosec security scanner
+        uses: securego/gosec@master
+        with:
+          args: '-no-fail -fmt sarif -out results.sarif ./...'
+      - name: upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
